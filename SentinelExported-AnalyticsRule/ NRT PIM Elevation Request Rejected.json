@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspace": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/2d118b4b-21e7-4ce1-973d-4ec00c9ef342')]",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/2d118b4b-21e7-4ce1-973d-4ec00c9ef342')]",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "kind": "NRT",
+      "apiVersion": "2023-02-01-preview",
+      "properties": {
+        "displayName": " NRT PIM Elevation Request Rejected",
+        "description": "\nNRT PIM Elevation \nNRT PIM Elevation Request RejectedRequest Rejected",
+        "alertDetailsOverride": null,
+        "customDetails": null,
+        "entityMappings": null,
+        "eventGroupingSettings": null,
+        "incidentConfiguration": {
+          "createIncident": true,
+          "groupingConfiguration": {
+            "enabled": false,
+            "groupByAlertDetails": [],
+            "groupByCustomDetails": [],
+            "groupByEntities": [],
+            "lookbackDuration": "PT5H",
+            "matchingMethod": "AllEntities",
+            "reopenClosedIncident": false
+          }
+        },
+        "query": "CommonSecurityLog",
+        "sentinelEntitiesMappings": null,
+        "severity": "Medium",
+        "suppressionDuration": "PT5H",
+        "suppressionEnabled": false,
+        "tactics": [],
+        "techniques": [],
+        "templateVersion": null,
+        "alertRuleTemplateName": null,
+        "enabled": true
+      }
+    }
+  ]
+}
