@@ -1,0 +1,100 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspace": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/562a4354-49d1-4ccd-ac8d-88e51e4982e7')]",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/562a4354-49d1-4ccd-ac8d-88e51e4982e7')]",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "kind": "Scheduled",
+      "apiVersion": "2023-02-01-preview",
+      "properties": {
+        "displayName": "Egress Defend - Dangerous Attachment Detected",
+        "description": "Defend has detected a user has a suspicious file type from a suspicious sender in their mailbox.",
+        "alertDetailsOverride": {
+          "alertDescriptionFormat": null,
+          "alertDisplayNameFormat": "Alert - {{Account_0_FullName}} has suspicious attachment.",
+          "alertDynamicProperties": null,
+          "alertSeverityColumnName": null,
+          "alertTacticsColumnName": null
+        },
+        "customDetails": null,
+        "entityMappings": [
+          {
+            "entityType": "Account",
+            "fieldMappings": [
+              {
+                "columnName": "Account_0_FullName",
+                "identifier": "FullName"
+              }
+            ]
+          },
+          {
+            "entityType": "File",
+            "fieldMappings": [
+              {
+                "columnName": "Attachments_name",
+                "identifier": "Name"
+              }
+            ]
+          },
+          {
+            "entityType": "Mailbox",
+            "fieldMappings": [
+              {
+                "columnName": "Account_0_FullName",
+                "identifier": "MailboxPrimaryAddress"
+              }
+            ]
+          },
+          {
+            "entityType": "IP",
+            "fieldMappings": [
+              {
+                "columnName": "SenderIP",
+                "identifier": "Address"
+              }
+            ]
+          }
+        ],
+        "eventGroupingSettings": null,
+        "incidentConfiguration": {
+          "createIncident": true,
+          "groupingConfiguration": {
+            "enabled": false,
+            "groupByAlertDetails": null,
+            "groupByCustomDetails": null,
+            "groupByEntities": [],
+            "lookbackDuration": "PT5M",
+            "matchingMethod": "AllEntities",
+            "reopenClosedIncident": false
+          }
+        },
+        "query": "DefendAuditData\n| where ThreatLevel == \"suspicious\" or ThreatLevel == \"dangerous\"\n| mv-expand todynamic(Attachments)\n| where Attachments.name matches regex @\"(?i)^.*\\.(doc|docx|docm|pdf|xls|xlsx|xlsm|html|zip)$(?-i)\"\n| summarize attachmentCount=count() by TimeGenerated, tostring(Attachments.name), Subject, From, Account_0_FullName = trim(@\"[^@.\\w]+\",Recipients), timesClicked = LinksClicked, SenderIP\n",
+        "queryPeriod": "PT30M",
+        "queryFrequency": "PT30M",
+        "sentinelEntitiesMappings": null,
+        "severity": "Medium",
+        "suppressionDuration": "PT1H",
+        "suppressionEnabled": false,
+        "tactics": [
+          "Execution",
+          "InitialAccess",
+          "Persistence",
+          "PrivilegeEscalation"
+        ],
+        "techniques": null,
+        "templateVersion": null,
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "alertRuleTemplateName": null,
+        "enabled": false
+      }
+    }
+  ]
+}
