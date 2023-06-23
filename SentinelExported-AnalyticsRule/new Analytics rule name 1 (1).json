@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspace": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/ddf4fa27-3618-412e-99b0-25d6073b78ae')]",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/ddf4fa27-3618-412e-99b0-25d6073b78ae')]",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "kind": "Scheduled",
+      "apiVersion": "2023-02-01-preview",
+      "properties": {
+        "displayName": "new Analytics rule name 1",
+        "description": "new Analytics rule name 1",
+        "alertDetailsOverride": null,
+        "customDetails": null,
+        "entityMappings": null,
+        "eventGroupingSettings": {
+          "aggregationKind": "SingleAlert"
+        },
+        "incidentConfiguration": {
+          "createIncident": true,
+          "groupingConfiguration": {
+            "enabled": false,
+            "groupByAlertDetails": [],
+            "groupByCustomDetails": [],
+            "groupByEntities": [],
+            "lookbackDuration": "PT5H",
+            "matchingMethod": "AllEntities",
+            "reopenClosedIncident": false
+          }
+        },
+        "query": "CommonSecurityLog",
+        "queryPeriod": "PT5H",
+        "queryFrequency": "PT5H",
+        "sentinelEntitiesMappings": null,
+        "severity": "Medium",
+        "suppressionDuration": "PT5H",
+        "suppressionEnabled": false,
+        "tactics": [
+          "Reconnaissance"
+        ],
+        "techniques": [
+          "T1595"
+        ],
+        "templateVersion": null,
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "alertRuleTemplateName": null,
+        "enabled": true
+      }
+    }
+  ]
+}
