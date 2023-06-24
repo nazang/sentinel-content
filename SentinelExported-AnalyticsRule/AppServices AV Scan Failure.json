@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspace": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/6a14a7a3-8278-47a8-b17a-2f9f1571362c')]",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/6a14a7a3-8278-47a8-b17a-2f9f1571362c')]",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "kind": "Scheduled",
+      "apiVersion": "2023-02-01-preview",
+      "properties": {
+        "displayName": "AppServices AV Scan Failure",
+        "description": "Identifies if an AV scan fails in Azure App Services.",
+        "alertDetailsOverride": null,
+        "customDetails": null,
+        "entityMappings": [
+          {
+            "entityType": "Host",
+            "fieldMappings": [
+              {
+                "columnName": "HostCustomEntity",
+                "identifier": "FullName"
+              }
+            ]
+          }
+        ],
+        "eventGroupingSettings": null,
+        "incidentConfiguration": {
+          "createIncident": true,
+          "groupingConfiguration": {
+            "enabled": false,
+            "groupByAlertDetails": null,
+            "groupByCustomDetails": null,
+            "groupByEntities": [],
+            "lookbackDuration": "PT5M",
+            "matchingMethod": "AllEntities",
+            "reopenClosedIncident": false
+          }
+        },
+        "query": "\nlet timeframe = ago(1d);\nAppServiceAntivirusScanAuditLogs\n| where ScanStatus == \"Failed\"\n| extend HostCustomEntity = _ResourceId, timestamp = TimeGenerated\n",
+        "queryPeriod": "P1D",
+        "queryFrequency": "P1D",
+        "sentinelEntitiesMappings": null,
+        "severity": "Informational",
+        "suppressionDuration": "PT1H",
+        "suppressionEnabled": false,
+        "tactics": [],
+        "techniques": [],
+        "templateVersion": null,
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 1,
+        "alertRuleTemplateName": "c2da1106-bfe4-4a63-bf14-5ab73130ccd5",
+        "enabled": false
+      }
+    }
+  ]
+}
